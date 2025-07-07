@@ -21,6 +21,12 @@ const validateUserIdParam = [
         .withMessage('El ID del usuario debe ser un número entero válido')
 ];
 
+const validateTypeIdParam = [
+    param('typeId')
+        .isInt({ min: 1 })
+        .withMessage('El ID del tipo de ticket debe ser un número entero positivo')
+];
+
 // Validadores comunes para query parameters
 const validatePaginationQuery = [
     query('page')
@@ -73,6 +79,7 @@ module.exports = {
     validateIdParam,
     validateEventIdParam,
     validateUserIdParam,
+    validateTypeIdParam,
     validatePaginationQuery,
     validateDateRangeQuery,
     validateStatusQuery

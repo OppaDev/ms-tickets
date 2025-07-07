@@ -14,6 +14,7 @@ const {
     validateIdParam, 
     validateEventIdParam, 
     validateUserIdParam,
+    validateTypeIdParam,
     validatePaginationQuery,
     validateDateRangeQuery,
     validateStatusQuery
@@ -42,6 +43,7 @@ module.exports = {
     validateIdParam,
     validateEventIdParam,
     validateUserIdParam,
+    validateTypeIdParam,
     validatePaginationQuery,
     validateDateRangeQuery,
     validateStatusQuery

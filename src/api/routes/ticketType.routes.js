@@ -1,18 +1,17 @@
 const express = require('express');
 const ticketTypeController = require('../controllers/ticketType.controller');
-const { createTicketTypeValidator, updateTicketTypeValidator } = require('../dtos');
+const { 
+    createTicketTypeValidator, 
+    updateTicketTypeValidator, 
+    validateEventIdParam,
+    validateTypeIdParam
+} = require('../dtos');
 const { handleValidationErrors } = require('../middleware/validation.middleware');
-
-const { param } = require('express-validator');
 
 const router = express.Router({ mergeParams: true });
 
-// validador para el typeId
-const validateTypeIdParam = [
-  param('typeId')
-    .isInt({ min: 1 })
-    .withMessage('El ID del tipo de ticket debe ser un número entero positivo.')
-];
+// Validar eventId en todas las rutas
+router.use(validateEventIdParam, handleValidationErrors);
 
 // CRUD para tipos de tickets
 router.post('/', createTicketTypeValidator, handleValidationErrors, ticketTypeController.create);
