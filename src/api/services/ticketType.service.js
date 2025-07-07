@@ -6,10 +6,18 @@ const createTicketType = async (eventId, data) => {
     return newTicketType;
 };
 
-const getTicketTypesByEvent = async (eventId) => {
+const getTicketTypesByEventId = async (eventId) => {
     const ticketTypes = await TicketType.findAll({
         where: { eventId }
     });
+
+    const existingType = await TicketType.findOne({
+        where: { eventId, name: data.name }
+    });
+    if (existingType) {
+        throw new ConflictError(`Ya existe un tipo de ticket con el nombre "${data.name}" para este evento.`);
+    }
+
     return ticketTypes;
 };
 
@@ -57,7 +65,7 @@ const deleteTicketType = async (eventId, typeId) => {
 
 module.exports = {
     createTicketType,
-    getTicketTypesByEvent,
+    getTicketTypesByEventId,
     getTicketTypeById,
     updateTicketType,
     deleteTicketType,

@@ -23,4 +23,6 @@ router.get('/:typeId', validateTypeIdParam, handleValidationErrors, ticketTypeCo
 
 router.put('/:typeId', validateTypeIdParam, updateTicketTypeValidator, handleValidationErrors, ticketTypeController.update);
 
+router.delete('/:typeId', validateTypeIdParam, handleValidationErrors, ticketTypeController.deleteTicketType);
+
 module.exports = router;
