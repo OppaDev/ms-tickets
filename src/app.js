@@ -8,7 +8,7 @@ config.express(app);
 config.cors(app);
 
 // Rutas principales
-app.get('/', (req, res) => {
+app.get('/api/v1', (req, res) => {
     res.json({
         message: 'Microservicio funcionando correctamente',
         timestamp: new Date().toISOString(),
@@ -24,9 +24,9 @@ app.get('/health', (req, res) => {
     });
 });
 
-// Aquí irán las rutas de tu API
-// const userRoutes = require('./api/routes/userRoutes');
-// app.use('/api/users', userRoutes);
+// Rutas de la API
+const apiRoutes = require('./api/routes');
+app.use('/api/v1', apiRoutes);
 
 // Middleware para rutas no encontradas
 app.use('*', (req, res) => {
