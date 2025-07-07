@@ -9,6 +9,30 @@ class TicketType extends Model {
         // Un tipo de ticket puede generar muchas entradas individuales
         this.hasMany(models.Ticket, { foreignKey: 'ticketTypeId' });
     }
+
+    // Método para serializar el objeto con nombres en español
+    toJSON() {
+        const values = { ...this.get() };
+        
+        return {
+            id: values.id,
+            eventoId: values.eventId,
+            nombre: values.name,
+            descripcion: values.description,
+            precio: parseFloat(values.price),
+            moneda: values.currency,
+            cantidad: values.quantity,
+            totalDisponibles: values.totalDisponibles,
+            vendidos: values.vendidos,
+            disponibles: values.disponibles,
+            minPorCompra: values.minPorCompra,
+            maxPorCompra: values.maxPorCompra,
+            fechaInicioVenta: values.fechaInicioVenta,
+            fechaFinVenta: values.fechaFinVenta,
+            fechaCreacion: values.createdAt,
+            fechaActualizacion: values.updatedAt
+        };
+    }
 }
 
 const initTicketType = (sequelize) => {
@@ -32,6 +56,11 @@ const initTicketType = (sequelize) => {
             },
             field: 'name'
         },
+        description: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+            field: 'description'
+        },
         price: {
             type: DataTypes.DECIMAL(10, 2),
             allowNull: false,
@@ -40,6 +69,18 @@ const initTicketType = (sequelize) => {
                 min: { args: [0], msg: 'El precio no puede ser negativo.' }
             },
             field: 'price'
+        },
+        currency: {
+            type: DataTypes.STRING(3),
+            allowNull: false,
+            defaultValue: 'USD',
+            validate: {
+                isIn: {
+                    args: [['USD', 'EUR', 'GBP', 'JPY', 'CAD', 'AUD', 'CHF', 'CNY', 'SEK', 'NZD']],
+                    msg: 'La moneda debe ser una moneda válida.'
+                }
+            },
+            field: 'currency'
         },
         quantity: {
             type: DataTypes.INTEGER,
@@ -50,15 +91,51 @@ const initTicketType = (sequelize) => {
             },
             field: 'quantity'
         },
-        saleStartDate: {
-            type: DataTypes.DATE,
+        totalDisponibles: {
+            type: DataTypes.INTEGER,
             allowNull: false,
-            field: 'sale_start_date'
+            defaultValue: 0,
+            field: 'total_disponibles'
         },
-        saleEndDate: {
+        vendidos: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0,
+            field: 'vendidos'
+        },
+        disponibles: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0,
+            field: 'disponibles'
+        },
+        minPorCompra: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 1,
+            validate: {
+                min: { args: [1], msg: 'El mínimo por compra debe ser al menos 1.' }
+            },
+            field: 'min_por_compra'
+        },
+        maxPorCompra: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 10,
+            validate: {
+                min: { args: [1], msg: 'El máximo por compra debe ser al menos 1.' }
+            },
+            field: 'max_por_compra'
+        },
+        fechaInicioVenta: {
             type: DataTypes.DATE,
             allowNull: false,
-            field: 'sale_end_date'
+            field: 'fecha_inicio_venta'
+        },
+        fechaFinVenta: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            field: 'fecha_fin_venta'
         }
     }, {
         sequelize,
