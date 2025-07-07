@@ -1,6 +1,13 @@
 const { TicketType, OrderItem } = require('../models');
 
 const createTicketType = async (eventId, data) => {
+    const existingType = await TicketType.findOne({
+        where: { eventId, name: data.name }
+    });
+    if (existingType) {
+        throw new ConflictError(`Ya existe un tipo de ticket con el nombre "${data.name}" para este evento.`);
+    }
+
     const ticketTypeData = { ...data, eventId };
     const newTicketType = await TicketType.create(ticketTypeData);
     return newTicketType;
@@ -10,14 +17,6 @@ const getTicketTypesByEventId = async (eventId) => {
     const ticketTypes = await TicketType.findAll({
         where: { eventId }
     });
-
-    const existingType = await TicketType.findOne({
-        where: { eventId, name: data.name }
-    });
-    if (existingType) {
-        throw new ConflictError(`Ya existe un tipo de ticket con el nombre "${data.name}" para este evento.`);
-    }
-
     return ticketTypes;
 };
 

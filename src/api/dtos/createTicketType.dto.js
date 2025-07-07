@@ -3,10 +3,6 @@
 const { body } = require('express-validator');
 
 const createTicketTypeValidator = [
-    body('eventId')
-        .isInt({ min: 1 })
-        .withMessage('El ID del evento debe ser un número entero válido'),
-
     body('name')
         .notEmpty()
         .withMessage('El nombre del tipo de ticket es requerido')
