@@ -3,6 +3,6 @@ const ticketTypeRoutes = require('./ticketType.routes');
 
 const router = express.Router();
 
-router.use('/events/:eventId/ticket-types', ticketTypeRoutes);
+router.use('/eventos/:eventoId/tipos-ticket', ticketTypeRoutes);
 
 module.exports = router;
