@@ -15,7 +15,11 @@ class CartController {
     async addItem(req, res, next) {
         try {
             const userId = req.user.id;
-            const { ticketTypeId, quantity } = req.body;
+            const { ticketTypeId, cantidad } = req.body;
+            
+            // Mapeo del DTO: cantidad (español) -> quantity (inglés)
+            const quantity = cantidad;
+            
             const updatedCart = await cartService.addItem(userId, ticketTypeId, quantity);
             res.status(200).json({
                 ...updatedCart,

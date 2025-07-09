@@ -6,7 +6,7 @@ const addItemToCartDTO = [
         .notEmpty().withMessage('El ticketTypeId es requerido.')
         .isInt({ min: 1 }).withMessage('El ticketTypeId debe ser un número entero positivo.'),
 
-    body('quantity')
+    body('cantidad')
         .notEmpty().withMessage('La cantidad es requerida.')
         .isInt({ min: 1 }).withMessage('La cantidad debe ser un número entero positivo.'),
 ];

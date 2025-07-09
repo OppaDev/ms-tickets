@@ -1,5 +1,6 @@
 // src/api/services/cart.service.js
 const { sequelize, Cart, CartItem, TicketType } = require('../models');
+const { Op } = require('sequelize');
 const { NotFoundError, ConflictError, BadRequestError } = require('../../utils/errors');
 
 const CART_EXPIRATION_MINUTES = 15;
@@ -48,10 +49,28 @@ class CartService {
             }
 
             // Verificar stock: total - vendidos - reservados en otros carritos
+            // Primero obtenemos los IDs de carritos que no han expirado
+            const activeCartIds = await Cart.findAll({
+                where: {
+                    expiresAt: {
+                        [Op.gt]: new Date()
+                    }
+                },
+                attributes: ['id'],
+                transaction
+            });
+
+            const activeCartIdValues = activeCartIds.map(cart => cart.id);
+
+            // Luego calculamos la cantidad reservada para este tipo de ticket
             const reservedQuantity = await CartItem.sum('quantity', {
-                where: { ticketTypeId },
-                include: [{ model: Cart, where: { expiresAt: { [sequelize.Op.gt]: new Date() } } }],
-                transaction,
+                where: {
+                    ticketTypeId,
+                    cartId: {
+                        [Op.in]: activeCartIdValues.length > 0 ? activeCartIdValues : [0]
+                    }
+                },
+                transaction
             }) || 0;
 
             const availableStock = ticketType.quantity - ticketType.sold - reservedQuantity;
